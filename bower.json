@@ -1,0 +1,11 @@
+{
+  "name": "webapp",
+  "private": true,
+  "dependencies": {
+    "bootstrap-sass-official": "~3.3.6",
+    "d3": "~3.5.12",
+    "lodash": "~3.10.1",
+    "jquery-jsonview": "~1.2.3"
+  },
+  "devDependencies": {}
+}
