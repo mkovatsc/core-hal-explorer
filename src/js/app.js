@@ -8,8 +8,30 @@ $(window).resize(function() {
     update();
 
 });
+
+function load_proxy(){
+    if (window.CoAPRequest == undefined) {
+        $('.run').prop('disabled', true);
+        $('.proxy-missing button').button('loading');
+        $.getScript("http://localhost:8080/coap.js")
+            .done(function(script, textStatus) {
+                $('.proxy-missing').hide();
+                $('.run').prop('disabled', false);
+            }).error(function() {
+                $('.proxy-missing').show();
+                $('.proxy-missing button').button('reset');
+            });
+    } else {
+        $('.run').prop('disabled', false);
+    }
+}
+load_proxy();
+$('.proxy-missing button').click(load_proxy)
+
 var color = d3.scale.category10();
-$(".run").on("click", function() { 
+var oldnodes = [];
+$(".run").on("click", function() {
+    oldnodes = _.clone(nodes);
 	for(var k in nodes){
 		delete nodes[k];
 	}
@@ -155,11 +177,11 @@ function update() {
     link2 = _.map(links, function(l) {
         var link = {}
         link.type = l.rel||"initial";
-        link.source = nodes[l.source] || (nodes[l.source] = {
+        link.source = nodes[l.source] || (nodes[l.source] = oldnodes[l.source] ||  {
             name: l.source,
             url:l.source
         });
-        link.target = nodes[l.target] || (nodes[l.target] = {
+        link.target = nodes[l.target] || (nodes[l.target] = oldnodes[l.target] ||{
             name: l.target,
             url:l.target
         });
@@ -167,9 +189,10 @@ function update() {
     });
     force.size([width, height]).nodes(d3.values(nodes))
         .links(link2).start();
-    path.selectAll("path")
-        .data(force.links())
-        .enter().append("path")
+
+    var pathdata = path.selectAll("path")
+        .data(force.links());
+    pathdata.enter().append("path")
         .attr("class", function(d) {
             return "link " + d.type;
         })
@@ -177,21 +200,24 @@ function update() {
         .attr("marker-end", function(d) {
             return marker(color(d.type));
         });
-    circles.selectAll("circle")
-        .attr("class",function(d){
-        	return current==d?"selected":"";
+    pathdata.exit().remove();
+
+    var circlesdata = circles.selectAll("circle")
+        .data(force.nodes());
+
+    circlesdata.attr("class",function(d){
+            return current==d?"selected":"";
         })
-        .data(force.nodes())
         .enter().append("circle")
         .attr("r", 6)
         .on("click",load)
-        .style("stroke-width",function(d){
-        	return current==d?5:1;
-        })
         .call(force.drag);
-    text.selectAll("text")
-        .data(force.nodes())
-        .text(function(d) {
+
+    circlesdata.exit().remove();
+    var textdata = text.selectAll("text")
+        .data(force.nodes());
+    
+    textdata.text(function(d) {
             return d.name;
         })
         .enter().append("text")
@@ -201,7 +227,8 @@ function update() {
             return d.name;
         });
 
-    force.start();
+    textdata.exit().remove();
+
     var legendRectSize = 20;
     var legendSpacing = 5;
     var legend = legends
@@ -226,6 +253,7 @@ legend.append('text')
     .attr('x', legendRectSize + legendSpacing)
     .attr('y', legendRectSize - legendSpacing)
     .text(function(d) { return d; });
+    force.resume();
 }
 
 // Use elliptical arc path segments to doubly-encode directionality.
