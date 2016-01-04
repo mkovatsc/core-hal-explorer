@@ -157,8 +157,9 @@ var text = svg.append('g');
 var current = null;
 1 
 var legends = d3.select('svg')
-    .append("g");
+    .append("g"); 
 function load(d){
+    url = d;
     $('.json').text("");
     $('#url').text(d.url).attr("href",d.url);
     $.get(d.url, function(data) {
@@ -172,6 +173,10 @@ function load(d){
     current = d; 
     update();
 }
+$('#url').on("click", function(e){
+    e.preventDefault();
+    load(current);
+})
 function update() { 
     width = $(".view").width();
     svg.attr("width", width);
