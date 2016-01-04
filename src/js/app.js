@@ -160,6 +160,7 @@ var legends = d3.select('svg')
     .append("g");
 function load(d){
     $('.json').text("");
+    $('#url').text(d.url).attr("href",d.url);
     $.get(d.url, function(data) {
     	$('.json').text(data);
     	try{

@@ -16,7 +16,7 @@
 
 		<div class="row">
 			<div class="col-md-12">
-<div class="alert alert-danger proxy-missing" role="alert">
+<div class="alert alert-danger proxy-missing" role="alert" style="display:none">
 <div class="buttons"><a class="btn btn-default" href="https://github.com/ynh/coap-polyfill" target="_blank">Download Server</a> <button class="btn btn-danger">Retry</button></div>
 CoAP Polyfill Proxy Server is not running. </div> 
 </div>
@@ -35,8 +35,15 @@ CoAP Polyfill Proxy Server is not running. </div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6 view"></div>
-			<div class="col-md-6 json"></div>
+			<div class="col-md-6 view">
+			</div>
+			<div class="col-md-6"> 
+				<div>
+				<a id="url" href="#" style="margin-top: 5px;margin-bottom: 5px;" class="btn btn-default btn-block"></a>
+				<a id="url"  href="" ></a> 
+				</div>
+				<div class="json"></div>
+			</div>
 		</div>
 
 
@@ -44,6 +51,5 @@ CoAP Polyfill Proxy Server is not running. </div>
 	</div> <!-- /container -->
 
 	<script src="assets/js/app.min.js"></script>
-	<script src="http://localhost:8080/coap.js" type="application/javascript"></script>
   </body>
 </html>
