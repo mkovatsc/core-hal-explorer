@@ -69,14 +69,14 @@ function process(url) {
 	            console.log(el);
 	            var val = el.substring(1, el.indexOf('>'));
 	    		var uri = resolve(val, url);
-	            if(el.indexOf('ct=6')>0){
+//	            if(el.indexOf('ct=6')>0){
 				    links.push({
 				        source: url,
 				        target: uri
 				    });
 		            process(uri);
 				    update();
-		        }
+//		        }
 	        });
 	    }else{
 	    	var item = JSON.parse(data);
